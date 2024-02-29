@@ -4,9 +4,13 @@ import numpy as np
 def light_dark(image):
     average = image.mean()
     if (average < 127):
-        return 'Dark'
+        return '0'
     else:
-        return 'Light'
+        return '1'
+
+def print_list(my_list):
+    for item in my_list:
+        print(item)
 
 print("Attempting to read video...")
 cap = cv2.VideoCapture('converter\Bad Apple.mp4')
@@ -50,14 +54,18 @@ while (cap.isOpened()):
     for j in range(1, 8):
         cv2.line(gridImage, (S_Width * j, 0), (S_Width * j, Q_SizeY), (0, 0, 255), 1)
 
+
+    TLarray = []
     for i in range(0, 8):
         for j in range(0, 8):
             roi = topLeft[i * S_Height:i * S_Height + S_Height, j * S_Width:j * S_Width + S_Width]
-            print(light_dark(roi), "\t", i + 1, "x", j + 1)
-            output.write(gridImage)  # Write gridImage instead of topLeft
-            cv2.imshow("Bad Apple", gridImage)
-            if cv2.waitKey(1) & 0xFF == ord('s'):
-                break
+            TLarray.append(light_dark(roi))
+            # print(light_dark(roi), "\t", i + 1, "x", j + 1)
+    
+    output.write(gridImage)  # Write gridImage instead of topLeft
+    cv2.imshow("Bad Apple", gridImage)
+    if cv2.waitKey(1) & 0xFF == ord('s'):
+        break
 
 cap.release()
 output.release()
