@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+TLarray, TRarray, BLarray, BRarray = []
+
 def light_dark(image):
     average = image.mean()
     if (average < 127):
@@ -35,15 +37,14 @@ while (cap.isOpened()):
     thresh, fullBW = cv2.threshold(fullGS, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
     # Split into quarters
-    topLeft = fullBW[0:centerY, 0:centerX]
-    topRight = fullBW[0:centerY, centerX:width]
-    bottomLeft = fullBW[centerY:height, 0:centerX]
+    topLeft     = fullBW[0:centerY, 0:centerX]
+    topRight    = fullBW[0:centerY, centerX:width]
+    bottomLeft  = fullBW[centerY:height, 0:centerX]
     bottomRight = fullBW[centerY:height, centerX:width]
 
     # 8x8 section size
-    Q_SizeX, Q_SizeY = int(width // 2), int(height // 2)
-    Q_CenterX, Q_CenterY = int(centerX // 4), int(centerY // 4)
-    S_Width, S_Height = int(width // 16), int(height // 16)
+    Q_SizeX, Q_SizeY        = int(width // 2), int(height // 2)
+    S_Width, S_Height       = int(width // 16), int(height // 16)
 
     # Convert to 8x8 square
     # Top left
@@ -58,7 +59,6 @@ while (cap.isOpened()):
         cv2.line(gridImage, (S_Width * j, 0), (S_Width * j, Q_SizeY), (0, 0, 255), 1)
 
 
-    TLarray = []
     for i in range(0, 8):
         for j in range(0, 8):
             roi = topLeft[i * S_Height:i * S_Height + S_Height, j * S_Width:j * S_Width + S_Width]
