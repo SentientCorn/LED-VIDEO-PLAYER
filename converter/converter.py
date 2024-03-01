@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-TLarray, TRarray, BLarray, BRarray = []
+TLarray, TRarray, BLarray, BRarray = [], [], [], []
 
 def light_dark(image):
     average = image.mean()
@@ -53,11 +53,9 @@ while (cap.isOpened()):
     # Horizontal Line
     for i in range(1, 8):
         cv2.line(gridImage, (0, S_Height * i), (Q_SizeX, S_Height * i), (0, 0, 255), 1)
-
-    # Vertical Line
-    for j in range(1, 8):
-        cv2.line(gridImage, (S_Width * j, 0), (S_Width * j, Q_SizeY), (0, 0, 255), 1)
-
+    # # Vertical Line
+    # for j in range(1, 8):
+        cv2.line(gridImage, (S_Width * i, 0), (S_Width * i, Q_SizeY), (0, 0, 255), 1)
 
     for i in range(0, 8):
         for j in range(0, 8):
@@ -69,6 +67,10 @@ while (cap.isOpened()):
     cv2.imshow("Bad Apple", gridImage)
     if cv2.waitKey(1) & 0xFF == ord('s'):
         break
+
+
+
+
 
 print_list(TLarray)
 
