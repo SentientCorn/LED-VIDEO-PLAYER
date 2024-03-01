@@ -14,7 +14,6 @@ def print_list(my_list):
 
 print("Attempting to read video...")
 cap = cv2.VideoCapture('converter\Bad Apple.mp4')
-output = cv2.VideoWriter('Threshold.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 30, (1080, 1920))
 
 if (cap.isOpened() == 0):
     print("Video not read")
@@ -26,8 +25,12 @@ fps = cap.get(cv2.CAP_PROP_FPS)
 width, height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 centerX, centerY = int((width // 2)), int((height // 2))
 
+output = cv2.VideoWriter('output.mp4',cv2.VideoWriter_fourcc(*"mp4v"), fps, (width, height))
+
 while (cap.isOpened()):
-    ret, fullSection = cap.read()  # Full frame of the video
+    read, fullSection = cap.read()  # Full frame of the video
+    if not read:
+        break 
     fullGS = cv2.cvtColor(fullSection, cv2.COLOR_BGR2GRAY)
     thresh, fullBW = cv2.threshold(fullGS, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
@@ -66,6 +69,8 @@ while (cap.isOpened()):
     cv2.imshow("Bad Apple", gridImage)
     if cv2.waitKey(1) & 0xFF == ord('s'):
         break
+
+print_list(TLarray)
 
 cap.release()
 output.release()
