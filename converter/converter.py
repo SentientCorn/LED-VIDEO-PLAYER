@@ -23,15 +23,15 @@ def display_section (_input, _name, _QWidth, _QHeight, _SWidth, _SHeight, _grid)
   cv2.imshow(f"{_name}", display)
 
 def array_writer(array, arrayName, file):
-  file.write("byte {format(arrayName)}[8][] = {")
-  for i in range (0, len(array), 8):
-    file.write("{")
-    file.write(', '.join(array[i:i+8]))
-    if (i != (len(array) - 8)):
-      file.write("},")
-    else:
-      file.write("}")
-  file.write("};\n")
+    file.write(f'byte {arrayName}[8][] = {{')
+    for i in range (0, len(array), 8):
+        file.write("{")
+        file.write(', '.join(array[i:i+8]))
+        if (i != (len(array) - 8)):
+            file.write("},")
+        else:
+            file.write("}")
+    file.write("};\n")
 
 print("Attempting to read video...")
 cap = cv2.VideoCapture('converter\Bad Apple.mp4')
