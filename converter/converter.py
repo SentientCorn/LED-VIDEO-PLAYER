@@ -59,24 +59,81 @@ while (cap.isOpened()):
     display_section(bottomRight,"Bottom Right", Q_SizeX, Q_SizeY, S_Width, S_Height, 1) 
 
     # Convert to 8x8 square
-    # Top left
-
-
-
+    #Top Left
     for i in range(0, 8):
         for j in range(0, 8):
             roi = topLeft[i * S_Height:i * S_Height + S_Height, j * S_Width:j * S_Width + S_Width]
             TLarray.append(light_dark(roi))
+            # print(light_dark(roi), "\t", i + 1, "x", j + 1)   
+
+    #Top Right
+    for i in range(0, 8):
+        for j in range(0, 8):
+            roi = topRight[i * S_Height:i * S_Height + S_Height, j * S_Width:j * S_Width + S_Width]
+            TRarray.append(light_dark(roi))
             # print(light_dark(roi), "\t", i + 1, "x", j + 1)
-    
+
+    #Bottom Left
+    for i in range(0, 8):
+        for j in range(0, 8):
+            roi = bottomLeft[i * S_Height:i * S_Height + S_Height, j * S_Width:j * S_Width + S_Width]
+            BLarray.append(light_dark(roi))
+            # print(light_dark(roi), "\t", i + 1, "x", j + 1)
+
+    #Bottom Right
+    for i in range(0, 8):
+        for j in range(0, 8):
+            roi = bottomRight[i * S_Height:i * S_Height + S_Height, j * S_Width:j * S_Width + S_Width]
+            BRarray.append(light_dark(roi))
+            # print(light_dark(roi), "\t", i + 1, "x", j + 1)   
+        
     if cv2.waitKey(1) & 0xFF == ord('s'):
         break
 
+# Print to file 
+#Top Left
+tempStr = ''.join(map(str, TLarray))
+tempArr = [''.join(tempStr[i:i+8]) for i in range (0, len(tempStr), 8)]
+finArrTL = [f'B{format(item)}'for item in tempArr]
 
+tempStr = ''.join(map(str, TRarray))
+tempArr = [''.join(tempStr[i:i+8]) for i in range (0, len(tempStr), 8)]
+finArrTR = [f'B{format(item)}'for item in tempArr]
 
+tempStr = ''.join(map(str, BLarray))
+tempArr = [''.join(tempStr[i:i+8]) for i in range (0, len(tempStr), 8)]
+finArrBL = [f'B{format(item)}'for item in tempArr]
 
+tempStr = ''.join(map(str, BRarray))
+tempArr = [''.join(tempStr[i:i+8]) for i in range (0, len(tempStr), 8)]
+finArrBR = [f'B{format(item)}'for item in tempArr]
 
-# print_list(TLarray)
+with open('array.cpp', 'w') as file:
+    file.write("#include <Arduino.h>\n")
+    file.write("uint8_t FPS = {};\n".format(int(fps)))
+    file.write("byte TLarray[8][] = {{")
+    for i in range (0, len(finArrTL), 8):
+        file.write(', '.join(finArrTL[i:i+8]))
+        file.write("},")
+    file.write("};\n")
+
+    file.write("byte TRarray[8][] = {{")
+    for i in range (0, len(finArrTR), 8):
+        file.write(', '.join(finArrTR[i:i+8]))
+        file.write("},")
+    file.write("};\n")
+
+    file.write("byte BLarray[8][] = {{")
+    for i in range (0, len(finArrBL), 8):
+        file.write(', '.join(finArrBL[i:i+8]))
+        file.write("},")
+    file.write("};\n")
+
+    file.write("byte BRarray[8][] = {{")
+    for i in range (0, len(finArrBR), 8):
+        file.write(', '.join(finArrBR[i:i+8]))
+    file.write("};\n")
+
 
 cap.release()
 cv2.destroyAllWindows()
